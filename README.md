@@ -1,6 +1,6 @@
 ## Sowhp工具前言
 
-本工具是[eyeurl](https://github.com/yunxiaoshu/eyeurl)的镜像工具，原工具为Python环境下编写，由于我本人信用分期升级了下吃饭的家伙，导致现有办公环境无法再正常运行该工具，故就自己写了一个golang版本的镜像工具。
+本工具是[eyeurl](https://github.com/yunxiaoshu/eyeurl)的镜像工具，原工具为Python环境下编写，由于我本人最近升级了下吃饭的家伙，导致现有办公环境无法再正常运行该工具，故就自己写了一个golang版本的镜像工具。
 
 ### 工具说明
 
