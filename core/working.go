@@ -10,7 +10,7 @@ import (
 )
 
 // 当前版本信息
-var version = "1.0.0"
+var version = "1.0.1"
 
 // logo
 var slogan = `
@@ -29,9 +29,11 @@ var slogan = `
 `
 
 var (
-	txtfilepath string
-	resultmap   map[string]map[string][]string
-	arraymap    map[string][]string
+	txtfilepath  string
+	resultmap    map[string]map[string][]string
+	arraymap     map[string][]string
+	count        = 0 // 用于统计当前截图的顺序
+	count_result = 0 // 用于统计计数当前拍摄成功的条数
 )
 
 func Flag() {
@@ -62,7 +64,8 @@ func run(path string) {
 	urls := scripts.FindTextUrl(path) // 获取TXT里url列表
 	log.Debug(fmt.Sprint("以获取本地TXT文本里URL列表：", urls))
 	resultname := fmt.Sprintf("result_%s", scripts.GetTimeStrin())
-	log.Common("以获取本地URL列表信息数据，正在截图拍照中...")
+	total := len(urls) // 获取本地列表中的数据长度
+	log.Common(fmt.Sprintf("以获取本地URL列表信息数据，共涉及%v条，正在截图拍照中...", total))
 	arraymap = make(map[string][]string)             // 初始化arraymap空间地址
 	resultmap = make(map[string]map[string][]string) // 初始化resultmap空间地址
 	// 格式参考样例 arraymap["Website URL Address"] = []string{"TItle Name", "status", "网站截图路径"}
@@ -71,18 +74,19 @@ func run(path string) {
 	dire.Dir_mk(fmt.Sprintf("./result/%s/%s", resultname, "data")) // 创建本次扫描图片存放目录
 	for _, url := range urls {
 		urlresultlist := scripts.ChromeScreenshot(url, resultname)
-
+		count = count + 1 // 用于展示当前截图拍照的顺序位置
 		// 判断是否拍照成功，并根据拍照结果进行对应的结果填充
 		if len(urlresultlist) == 0 {
-			log.Common(fmt.Sprintf("访问 %s 地址超时，无法进行首页截图拍照！", url))
+			log.Common(fmt.Sprintf("[%v/%v] 访问 %s 地址超时，无法进行首页截图拍照！", count, total, url))
 			arraymap[url] = []string{"x_x!", "连接失败", "data/"}
 		} else {
-			log.Common(fmt.Sprintf("已完成对 %s 地址的首页截图拍照！", url))
+			count_result = count_result + 1
+			log.Common(fmt.Sprintf("[%v/%v] 已完成对 %s 地址的首页截图拍照！", count, total, url))
 			arraymap[urlresultlist[0]] = []string{urlresultlist[1], urlresultlist[2], urlresultlist[3]}
 		}
 	}
 	resultmap[resultname] = arraymap
-	log.Common(fmt.Sprintf("已完成所有URL地址的截图拍照，共拍摄 %d 条", len(arraymap)))
+	log.Common(fmt.Sprintf("已完成所有URL地址的截图拍照，网站首页拍摄成功数量总数为 %v 条", count_result))
 	log.Common("正在生成最终结果报告文件...")
 	scripts.CreateHtml(resultmap)
 }
