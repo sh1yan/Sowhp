@@ -101,7 +101,7 @@ func Error(detail string) {
 
 // Info 消息日志 log等级：2
 func Info(detail string) {
-	noWrite = 0
+	noWrite = 1
 	log(LevelInfo, noWrite, fmt.Sprintf("[%s] [%s] %s", Cyan(getDate()), LightGreen("INFO"), detail))
 }
 
@@ -125,7 +125,7 @@ func Verbose(detail string) {
 
 // Success 成功信息日志 log等级：2
 func Success(detail string) {
-	noWrite = 0
+	noWrite = 1
 	log(LevelInfo, noWrite, fmt.Sprintf("[%s] [%s] %s", Cyan(getDate()), LightGreen("+"), detail))
 }
 
